@@ -1,0 +1,13 @@
+package hwkang.pictureMap;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class PictureMapApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(PictureMapApplication.class, args);
+	}
+
+}
