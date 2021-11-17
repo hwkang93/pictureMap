@@ -23,35 +23,13 @@ import java.util.List;
 
 /*
     https://developers.google.com/drive/api/v3/quickstart/java#prerequisites
+    https://developers.google.com/drive/activity/v2/quickstart/java
+
+    * 코틀린이긴 한데 참고하면 좋을 것 같음
+    https://jsonobject.tistory.com/561
  */
 @Service
 public class GooglePictureService implements PictureService {
-
-    private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-    private static final String TOKENS_DIRECTORY_PATH = "tokens";
-
-    private static final List<String> SCOPES = Collections.singletonList(DriveScopes.DRIVE_METADATA_READONLY);
-    private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
-
-    private Credential getCredential(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
-
-        InputStream in = this.getClass().getResourceAsStream(CREDENTIALS_FILE_PATH);
-        if(in == null) {
-            throw new FileNotFoundException("Resource not found : " + CREDENTIALS_FILE_PATH);
-        }
-
-        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
-        GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-                HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
-                .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
-                .setAccessType("offline")
-                .build();
-
-        LocalServerReceiver receiver = new LocalServerReceiver.Builder()
-                .setPort(8888).build();
-
-        return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
-    }
 
     @Override
     public List<Picture> findList() {
