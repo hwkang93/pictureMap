@@ -4,10 +4,12 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-//Annotation type
-@Target(ElementType.PARAMETER)
 
-// Indicates how long annotations with the annotated type are to be retained
+/**
+ * 로그인한 사용자 정보를 SessionUser 클래스에 매핑해주는 어노테이션
+ *
+ */
+@Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface LoginUser {
 }
