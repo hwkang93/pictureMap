@@ -4,14 +4,13 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
-import java.util.function.Supplier;
 
 @RequiredArgsConstructor
 @Getter
 public enum OAuthType {
-    GOOGLE("google", "GooglePictureService"),
-    NAVER("naver", "NaverPictureService"),
-    KAKAO("kakao", "KakaoPictureService");
+    GOOGLE("google", "googlePictureService"),
+    NAVER("naver", "naverPictureService"),
+    KAKAO("kakao", "kakaoPictureService");
 
     private final String registrationId;
     private final String pictureServiceBeanName;
