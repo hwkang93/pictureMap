@@ -1,7 +1,6 @@
 package hwkang.pictureMap.auth;
 
 import hwkang.pictureMap.picture.service.PictureService;
-import hwkang.pictureMap.picture.service.impl.GooglePictureService;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -27,8 +26,8 @@ public class OAuthAttributes {
         this.pictureService = pictureService;
     }
 
-    public static OAuthAttributes of(OAuthType oAuthType, String userNameAttributeName,
-                                     Map<String, Object> attributes, PictureService pictureService) {
+    public static OAuthAttributes of(OAuthType oAuthType,
+                 String userNameAttributeName, Map<String, Object> attributes, PictureService pictureService) {
 
         return ofGoogle(userNameAttributeName, attributes, pictureService);
     }
