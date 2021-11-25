@@ -1,12 +1,14 @@
 package hwkang.pictureMap.picture.service.impl;
 
+import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.Drive.Files;
 import com.google.api.services.drive.DriveScopes;
+import com.google.api.services.drive.model.File;
+import com.google.api.services.drive.model.FileList;
 import hwkang.pictureMap.picture.dto.Picture;
 import hwkang.pictureMap.picture.service.PictureService;
 import org.springframework.stereotype.Service;
@@ -17,40 +19,57 @@ import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
+
+//참조 URL : https://cfdf.tistory.com/10
 
 /*
-    https://developers.google.com/drive/api/v3/quickstart/java#prerequisites
-    https://developers.google.com/drive/activity/v2/quickstart/java
-
-    * 코틀린이긴 한데 참고하면 좋을 것 같음
-    https://jsonobject.tistory.com/561
+    client_secret.json 파일에 있는 client-email 은 진짜 이메일이었음.
+    본 구글 계정에 폴더 및 파일을 만들고 client-email 에 공유를 해야 client-email 에서 확인이 가능함.
  */
 @Service
 public class GooglePictureService implements PictureService {
 
-    private Drive drive;
+    private final String KEY_FILE = "client_secret.json";
+    private final String APP_NAME = "picture-map";
+    private final List<String> SCOPES = Arrays.asList(DriveScopes.DRIVE);
 
-    private GooglePictureService() throws IOException, GeneralSecurityException {
-        String appName = "picture-map";
-        String keyFileName = "client_secret.json";
-        InputStream keyFile = ResourceUtils.getURL("classpath:"+keyFileName).openStream();
+    private final Drive drive;
 
-        GoogleCredential credential = GoogleCredential.fromStream(keyFile).createScoped(Arrays.asList(DriveScopes.DRIVE));
-        NetHttpTransport transport = GoogleNetHttpTransport.newTrustedTransport();
+    public GooglePictureService() throws IOException, GeneralSecurityException {
+        final InputStream keyFile = ResourceUtils.getURL("classpath:" + KEY_FILE).openStream();
+        final Credential credential = GoogleCredential.fromStream(keyFile).createScoped(SCOPES);
+        final NetHttpTransport transport = GoogleNetHttpTransport.newTrustedTransport();
 
-        drive = new Drive.Builder(transport, JacksonFactory.getDefaultInstance(), credential).setApplicationName(appName).build();
+        drive = new Drive.Builder(transport, JacksonFactory.getDefaultInstance(), credential)
+                .setApplicationName(APP_NAME)
+                .build();
+
+        /*
+        UserCredentials.newBuilder()
+                .setClientId(clientId)
+                .setClientSecret(clientSecret)
+                .setRefreshToken(credential.getRefreshToken())
+                .build();
+
+        PhotosLibrarySettings settings =
+                PhotosLibrarySettings.newBuilder()
+                        .setCredentialsProvider(FixedCredentialsProvider.create(credential))
+                        .build();
+         */
     }
 
     @Override
-    public List<Picture> findList() throws IOException {
+    public List<Picture> findList() throws Exception {
+        FileList fileList = drive.files().list()
+                .setFields("nextPageToken, files(thumbnailLink,imageMediaMetadata,name,mimeType)")
+                .execute();
 
-        Files files = drive.files();
-        Files.List fileList = files.list();
-
-        fileList.forEach(System.out::printf);
-
-
-
-        return null;
+        return fileList.getFiles().stream()
+                .filter(Picture::validation)
+                .map(Picture::ofGoogleData)
+                .collect(Collectors.toList());
     }
+
 }
