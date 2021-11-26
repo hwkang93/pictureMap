@@ -61,8 +61,8 @@ public class GooglePictureService implements PictureService {
     }
 
     @Override
-    public List<Picture> findList() throws Exception {
-        FileList fileList = drive.files().list()
+    public List<Picture> pictureList() throws Exception {
+        final FileList fileList = drive.files().list()
                 .setFields("nextPageToken, files(thumbnailLink,imageMediaMetadata,name,mimeType)")
                 .execute();
 

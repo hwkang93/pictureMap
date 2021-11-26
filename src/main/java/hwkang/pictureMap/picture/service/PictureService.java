@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface PictureService {
 
-    List<Picture> findList() throws Exception;
+    List<Picture> pictureList() throws Exception;
 
 }
