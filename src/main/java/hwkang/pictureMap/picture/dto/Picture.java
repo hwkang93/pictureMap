@@ -11,14 +11,16 @@ public class Picture {
     private String name;
     private String time;
     private String imageLink;
-    private GeoLocation location;
+    private double latitude;
+    private double longitude;
 
     @Builder
-    public Picture(String name, String time, String imageLink, GeoLocation location) {
+    public Picture(String name, String time, String imageLink, double latitude, double longitude) {
         this.name = name;
         this.time = time;
         this.imageLink = imageLink;
-        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     /**
@@ -42,6 +44,11 @@ public class Picture {
         return true;
     }
 
+    /**
+     * Google Data -> Picture Object
+     * @param file (Google File)
+     * @return
+     */
     public static Picture ofGoogleData(File file) {
         final Location location = file.getImageMediaMetadata().getLocation();
 
@@ -49,7 +56,8 @@ public class Picture {
                 .name(file.getName())
                 .time(file.getImageMediaMetadata().getTime())
                 .imageLink(file.getThumbnailLink())
-                .location(new GeoLocation(location.getLatitude(), location.getLongitude()))
+                .latitude(location.getLatitude())
+                .longitude(location.getLongitude())
                 .build();
     }
 }
