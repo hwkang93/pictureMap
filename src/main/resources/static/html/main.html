@@ -1,14 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+<script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=c47781c53e7a58e5b6d03ae07e5ba38d&libraries=services"></script>
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
     <a href="/logout">로그아웃</a>
-
+    <div id="map" style="width: 400px; height: 400px;"></div>
     <script type="application/javascript">
-        console.log('hi!');
+        const container = document.querySelector('#map');
+        const options = {
+            center : new kakao.maps.LatLng(33.450701, 126.570661),
+            level : 3
+        };
+
+        const map = new kakao.maps.Map(container, options);
+
+        function test() {
+            const url = '/pictures';
+            const options = {};
+            fetch(url)
+                .then(response => response.json())
+                .then(response => console.log(response))
+                .catch(error => console.log(error));
+        }
     </script>
 </body>
 </html>
