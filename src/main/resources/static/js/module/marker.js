@@ -34,7 +34,7 @@ export default class Marker {
 
         this.#marker = new kakao.maps.Marker({
             position : position,
-            imageSrc: markerImage
+            image: markerImage
         })
     }
 
