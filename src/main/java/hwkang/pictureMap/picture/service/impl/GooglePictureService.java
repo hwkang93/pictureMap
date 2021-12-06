@@ -45,26 +45,22 @@ public class GooglePictureService implements PictureService {
         drive = new Drive.Builder(transport, JacksonFactory.getDefaultInstance(), credential)
                 .setApplicationName(APP_NAME)
                 .build();
-
-        /*
-        UserCredentials.newBuilder()
-                .setClientId(clientId)
-                .setClientSecret(clientSecret)
-                .setRefreshToken(credential.getRefreshToken())
-                .build();
-
-        PhotosLibrarySettings settings =
-                PhotosLibrarySettings.newBuilder()
-                        .setCredentialsProvider(FixedCredentialsProvider.create(credential))
-                        .build();
-         */
     }
 
     @Override
     public List<Picture> pictureList() throws Exception {
-        final FileList fileList = drive.files().list()
-                .setFields("nextPageToken, files(thumbnailLink,imageMediaMetadata,name,mimeType)")
+        final String fields = "nextPageToken, files(thumbnailLink,imageMediaMetadata,name,mimeType)";
+        final FileList fileList = drive.files()
+                .list()
+                .setFields(fields)
                 .execute();
+/*
+        final FileList fileList2 = drive.files().list()
+                .setFields("*")
+                .execute();
+
+        fileList2.getFiles().stream().forEach(System.out::println);
+*/
 
         return fileList.getFiles().stream()
                 .filter(Picture::validation)

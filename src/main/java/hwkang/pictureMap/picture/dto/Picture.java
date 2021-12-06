@@ -29,15 +29,13 @@ public class Picture {
      * @return
      */
     public static boolean validation(File file) {
+        //File 의 mimetype 은 이미지 형태여야 한다.
         if( ! file.getMimeType().startsWith("image")) {
             return false;
         }
 
-        if(file.getImageMediaMetadata() == null) {
-            return false;
-        }
-
-        if(file.getImageMediaMetadata().getLocation() == null) {
+        //File 은 메타데이터(좌표정보)를 반드시 가지고 있어야 한다.
+        if(file.getImageMediaMetadata() == null || file.getImageMediaMetadata().getLocation() == null) {
             return false;
         }
 
