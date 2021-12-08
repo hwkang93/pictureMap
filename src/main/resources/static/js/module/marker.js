@@ -36,6 +36,8 @@ export default class Marker {
             position : position,
             image: markerImage
         })
+        //console.log(`Marker Object`);
+        //console.log(this.#marker);
     }
 
     get marker() {
